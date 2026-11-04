@@ -1,0 +1,286 @@
+/*
+ * DevScripty FAQ Manager 1.1
+ * Fonts are NOT loaded here (no @import). Load them once via Breakdance global fonts,
+ * or the variables below fall back to the theme font.
+ */
+.ds-faq {
+	--ds-faq-font-body: 'Plus Jakarta Sans', sans-serif;
+	--ds-faq-font-heading: 'Playfair Display', serif;
+	--ds-faq-max-width: 1200px;
+	--ds-faq-padding: 0 20px;
+	--ds-faq-text: #55524E;
+	--ds-faq-heading: #1A1A1A;
+	--ds-faq-card-bg: #FFFFFF;
+	--ds-faq-border: #E8E2D9;
+	--ds-faq-border-hover: #D3C9BC;
+	--ds-faq-soft-bg: #FAF8F5;
+	--ds-faq-hover-bg: #F3EFEA;
+	--ds-faq-accent: #9E886D;
+	--ds-faq-tab-active-bg: #1A1A1A;
+	--ds-faq-tab-active-text: #FFFFFF;
+	--ds-faq-radius: 24px;
+	--ds-faq-gap: 16px;
+
+	box-sizing: border-box;
+	width: 100%;
+	max-width: var(--ds-faq-max-width);
+	margin: 0 auto;
+	padding: var(--ds-faq-padding);
+	font-family: var(--ds-faq-font-body);
+}
+.ds-faq *,
+.ds-faq *::before,
+.ds-faq *::after {
+	box-sizing: border-box;
+}
+
+/* Category tabs */
+.ds-faq__tabs {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 12px;
+	margin-bottom: 24px;
+}
+.ds-faq__tab {
+	appearance: none;
+	background: #FFFFFF;
+	color: var(--ds-faq-text);
+	border: 1px solid var(--ds-faq-border);
+	border-radius: 50px;
+	padding: 10px 22px;
+	font: 600 13px/1.2 var(--ds-faq-font-body);
+	cursor: pointer;
+	transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.ds-faq__tab:hover {
+	background: var(--ds-faq-hover-bg);
+	border-color: var(--ds-faq-border-hover);
+}
+.ds-faq__tab.is-active {
+	background: var(--ds-faq-tab-active-bg);
+	color: var(--ds-faq-tab-active-text);
+	border-color: var(--ds-faq-tab-active-bg);
+}
+.ds-faq__tab.is-active:hover {
+	background: var(--ds-faq-accent);
+	border-color: var(--ds-faq-accent);
+}
+.ds-faq__tab:focus-visible,
+.ds-faq__q:focus-visible {
+	outline: 2px solid var(--ds-faq-accent);
+	outline-offset: 2px;
+}
+.ds-faq__divider {
+	height: 1px;
+	width: 100%;
+	background: var(--ds-faq-border);
+	margin-bottom: 32px;
+}
+
+/* Search */
+.ds-faq__sr {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+}
+.ds-faq__search-input {
+	width: 100%;
+	margin: 0 0 var(--ds-faq-gap);
+	padding: 14px 20px;
+	border: 1px solid var(--ds-faq-border);
+	border-radius: 50px;
+	font: 500 14px/1.4 var(--ds-faq-font-body);
+	background: #FFFFFF;
+	color: var(--ds-faq-heading);
+}
+
+/* Accordion */
+.ds-faq__list {
+	display: flex;
+	flex-direction: column;
+	gap: var(--ds-faq-gap);
+}
+.ds-faq__item {
+	background: var(--ds-faq-card-bg);
+	border: 1px solid var(--ds-faq-border);
+	border-radius: var(--ds-faq-radius);
+	overflow: hidden;
+	transition: border-color 0.2s ease;
+}
+.ds-faq__item:hover {
+	border-color: var(--ds-faq-border-hover);
+}
+.ds-faq__item[hidden] {
+	display: none;
+}
+/* Reset theme heading styles that would otherwise leak into the card */
+.ds-faq__heading {
+	margin: 0;
+	padding: 0;
+	font: inherit;
+	letter-spacing: normal;
+	text-transform: none;
+}
+.ds-faq__q {
+	appearance: none;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 24px;
+	margin: 0;
+	padding: 24px 32px;
+	background: none;
+	border: 0;
+	border-radius: 0;
+	text-align: left;
+	font-family: var(--ds-faq-font-heading);
+	font-size: 22px;
+	font-weight: 700;
+	line-height: 1.35;
+	letter-spacing: normal;
+	text-transform: none;
+	color: var(--ds-faq-heading);
+	cursor: pointer;
+}
+.ds-faq__icon {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	border-radius: 50%;
+	border: 1px solid var(--ds-faq-border);
+	background: var(--ds-faq-soft-bg);
+	color: var(--ds-faq-accent);
+	transition: transform 0.3s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.ds-faq__item:hover .ds-faq__icon {
+	background: #FFFFFF;
+	border-color: var(--ds-faq-border-hover);
+}
+.ds-faq__item.is-open .ds-faq__icon {
+	transform: rotate(180deg);
+}
+
+/* Smooth open/close without measuring heights in JS */
+.ds-faq__a {
+	display: grid;
+	grid-template-rows: 0fr;
+	visibility: hidden;
+	transition: grid-template-rows 0.3s ease, visibility 0s linear 0.3s;
+}
+.ds-faq__item.is-open .ds-faq__a {
+	grid-template-rows: 1fr;
+	visibility: visible;
+	transition: grid-template-rows 0.3s ease, visibility 0s;
+}
+.ds-faq__a-clip {
+	min-height: 0;
+	overflow: hidden;
+}
+.ds-faq__a-inner {
+	padding: 24px 32px 28px;
+	border-top: 1px solid var(--ds-faq-border);
+	font-size: 16px;
+	line-height: 1.7;
+	color: var(--ds-faq-text);
+}
+.ds-faq__a-inner > :first-child {
+	margin-top: 0;
+}
+.ds-faq__a-inner > :last-child {
+	margin-bottom: 0;
+}
+.ds-faq__a-inner ul,
+.ds-faq__a-inner ol {
+	padding-left: 1.25em;
+}
+.ds-faq__a-inner li + li {
+	margin-top: 8px;
+}
+
+.ds-faq__empty {
+	margin: 16px 0 0;
+	color: var(--ds-faq-text);
+	opacity: 0.8;
+}
+
+/* Question row: optional lead icon + text */
+.ds-faq__q-main {
+	display: flex;
+	align-items: center;
+	gap: 14px;
+	min-width: 0;
+}
+.ds-faq__lead {
+	flex: 0 0 auto;
+	display: inline-flex;
+	color: var(--ds-faq-accent);
+}
+
+/* Dark card: per question (Card style box) or for every card with theme="dark" */
+.ds-faq__item--dark,
+.ds-faq--dark .ds-faq__item {
+	--ds-faq-card-bg: #1A1A1A;
+	--ds-faq-border: #2E2E2E;
+	--ds-faq-border-hover: #454545;
+	--ds-faq-heading: #FFFFFF;
+	--ds-faq-text: #E8E2D9;
+	--ds-faq-accent: #A8A29A;
+}
+.ds-faq__item--dark .ds-faq__icon,
+.ds-faq--dark .ds-faq__item .ds-faq__icon {
+	background: #2A2A2A;
+	border-color: #2A2A2A;
+	color: #FFFFFF;
+}
+.ds-faq__item--dark:hover .ds-faq__icon,
+.ds-faq--dark .ds-faq__item:hover .ds-faq__icon {
+	background: #3A3A3A;
+	border-color: #3A3A3A;
+}
+
+/* No JS: show every answer so the content stays readable and crawlable */
+.ds-faq:not(.is-ready) .ds-faq__a {
+	grid-template-rows: 1fr;
+	visibility: visible;
+}
+.ds-faq:not(.is-ready) .ds-faq__tabs,
+.ds-faq:not(.is-ready) .ds-faq__divider,
+.ds-faq:not(.is-ready) .ds-faq__search {
+	display: none;
+}
+
+@media (max-width: 640px) {
+	.ds-faq {
+		--ds-faq-radius: 18px;
+	}
+	.ds-faq__q {
+		padding: 18px 20px;
+		font-size: 18px;
+		gap: 16px;
+	}
+	.ds-faq__icon {
+		width: 36px;
+		height: 36px;
+	}
+	.ds-faq__a-inner {
+		padding: 18px 20px 22px;
+		font-size: 15px;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ds-faq__a,
+	.ds-faq__item.is-open .ds-faq__a,
+	.ds-faq__icon,
+	.ds-faq__item,
+	.ds-faq__tab {
+		transition: none;
+	}
+}
